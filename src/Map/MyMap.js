@@ -1,4 +1,9 @@
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import {
+  Autocomplete,
+  GoogleMap,
+  Marker,
+  useLoadScript,
+} from "@react-google-maps/api";
 import React, { useEffect, useState } from "react";
 
 // variables
@@ -12,6 +17,7 @@ const MyMap = () => {
   const [position, setPosition] = useState({ lat: 23.810331, lng: 90.412521 });
   const [weatherInfo, setWeatherInfo] = useState({});
   const [locationInfo, setLocationInfo] = useState({});
+  const [icon, setIcon] = useState("01d");
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -26,13 +32,15 @@ const MyMap = () => {
   const urlWeather = `https://api.openweathermap.org/data/2.5/weather?lat=${position.lat}&lon=${position.lng}&appid=${process.env.REACT_APP_WEATHER_API_KEY}&units=metric`;
 
   const urlLocation = `https://us1.locationiq.com/v1/reverse.php?key=${process.env.REACT_APP_LOCATION}&lat=${position.lat}&lon=${position.lng}&format=json`;
-  console.log(urlLocation);
 
   useEffect(() => {
     // weather
     fetch(urlWeather)
       .then((res) => res.json())
-      .then((data) => setWeatherInfo(data));
+      .then((data) => {
+        setIcon(data.weather[0].icon);
+        setWeatherInfo(data);
+      });
 
     // location
     fetch(urlLocation)
@@ -59,7 +67,7 @@ const MyMap = () => {
         }`}</h1>
         <div className="text-2xl mb-6 flex items-center justify-center space-x-2">
           <img
-            src={`http://openweathermap.org/img/wn/${weatherInfo?.weather[0].icon}.png`}
+            src={`http://openweathermap.org/img/wn/${icon}.png`}
             alt="icon"
           />
           {weatherInfo?.main?.temp}
@@ -74,6 +82,28 @@ const MyMap = () => {
         onClick={(event) => onClickHandler(event)}
       >
         <Marker position={position} />
+
+        <Autocomplete>
+          <input
+            type="text"
+            placeholder="Customized your placeholder"
+            style={{
+              boxSizing: `border-box`,
+              border: `1px solid transparent`,
+              width: `240px`,
+              height: `32px`,
+              padding: `0 12px`,
+              borderRadius: `3px`,
+              boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+              fontSize: `14px`,
+              outline: `none`,
+              textOverflow: `ellipses`,
+              position: "absolute",
+              left: "50%",
+              marginLeft: "-120px",
+            }}
+          />
+        </Autocomplete>
       </GoogleMap>
     </div>
   );
