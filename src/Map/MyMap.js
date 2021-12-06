@@ -6,8 +6,8 @@ const getCountry = require("country-currency-map").getCountry;
 // variables
 const libraries = ["places"];
 const googleMapStyles = {
-  width: "60vw",
-  height: "60vh",
+  width: "600px",
+  minHeight: "450px",
 };
 
 const MyMap = () => {
@@ -21,6 +21,7 @@ const MyMap = () => {
   const currentDate = format(new Date(), "yyyy-MM-dd");
   const oneDayBefore = addDays(new Date(), -1);
   const prevDate = format(oneDayBefore, "yyyy-MM-dd");
+  const [show, setShow] = useState(false);
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -100,10 +101,9 @@ const MyMap = () => {
   if (!isLoaded) return "Loading maps.";
 
   return (
-    <>
-      {" "}
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="location">
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="location p-8">
           <h1 className="text-4xl mb-6">{`${
             locationArr[locationArr?.length - 3] || ""
           }, ${locationArr[locationArr?.length - 2] || ""}, ${
@@ -117,45 +117,68 @@ const MyMap = () => {
             {weatherInfo?.main?.temp}
             <sup>o</sup>C
           </div>
-        </div>
 
-        <GoogleMap
-          mapContainerStyle={googleMapStyles}
-          zoom={10}
-          center={center}
-          onClick={(event) => onClickHandler(event)}
-        >
-          <Marker position={position} />
-        </GoogleMap>
-      </div>
-      <div className="grid grid-cols-3">
-        <div className="">
-          <div className="text-2xl font-bold text-gray-700">Currency</div>
-          <div className="">{currency}-USD</div>
-          <div className="">USD-CHF</div>
-        </div>
-        <div className="">
-          <div className="text-2xl font-bold text-gray-700">Price</div>
-          <div className="price">{currentCurrency?.localCurrencyUsd || 0}</div>
-          <div className="price">{currentCurrency?.usdChf || 0}</div>
-        </div>
-        <div className="div">
-          <div className="text-2xl font-bold text-gray-700">%Change</div>
-          <div
-            className={`${localToUSD > 0 ? "text-green-600" : "text-red-600"}`}
-          >
-            {localToUSD > 0 ? `+${localToUSD}` : `${localToUSD}`}%
-          </div>
-          <div
-            className={`${
-              usdChfChange > 0 ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {usdChfChange > 0 ? `+${usdChfChange}` : `${usdChfChange || 0}`}%
+          <div className="">
+            <button
+              onClick={() => setShow(!show)}
+              className="focus:outline-none bg-blue-600 text-white px-6 py-1 text-lg mb-4 hover:shadow-lg hover:bg-blue-500 focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 focus:bg-blue-600 transition rounded-lg"
+            >
+              See 4 days forecast
+            </button>
+            <div className={show ? "block" : "hidden"}>
+              <div class="flex justify-center items-center">
+                <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-500"></div>
+              </div>
+            </div>
           </div>
         </div>
+        <div className="">
+          <div>
+            <GoogleMap
+              mapContainerStyle={googleMapStyles}
+              zoom={10}
+              center={center}
+              onClick={(event) => onClickHandler(event)}
+            >
+              <Marker position={position} />
+            </GoogleMap>
+          </div>
+
+          <div className="grid grid-cols-3 mt-4">
+            <div className="">
+              <div className="text-2xl font-bold text-gray-700">Currency</div>
+              <div className="">{currency}-USD</div>
+              <div className="">USD-CHF</div>
+            </div>
+            <div className="">
+              <div className="text-2xl font-bold text-gray-700">Price</div>
+              <div className="price">
+                {currentCurrency?.localCurrencyUsd || 0}
+              </div>
+              <div className="price">{currentCurrency?.usdChf || 0}</div>
+            </div>
+            <div className="div">
+              <div className="text-2xl font-bold text-gray-700">%Change</div>
+              <div
+                className={`${
+                  localToUSD > 0 ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                {localToUSD > 0 ? `+${localToUSD}` : `${localToUSD}`}%
+              </div>
+              <div
+                className={`${
+                  usdChfChange > 0 ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                {usdChfChange > 0 ? `+${usdChfChange}` : `${usdChfChange || 0}`}
+                %
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
