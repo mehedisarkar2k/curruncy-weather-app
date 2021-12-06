@@ -64,6 +64,18 @@ const MyMap = () => {
   }, [country]);
 
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        setPosition({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      () => setPosition({ lat: 23.810331, lng: 90.412521 })
+    );
+  }, []);
+
+  useEffect(() => {
     fetch(
       `http://api.exchangeratesapi.io/v1/${currentDate}?access_key=${process.env.REACT_APP_EXCHANGE_RATES_API}`
     )
@@ -126,8 +138,8 @@ const MyMap = () => {
               See 4 days forecast
             </button>
             <div className={show ? "block" : "hidden"}>
-              <div class="flex justify-center items-center">
-                <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
+              <div className="flex justify-center items-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
               </div>
             </div>
           </div>
