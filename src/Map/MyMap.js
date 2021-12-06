@@ -101,9 +101,9 @@ const MyMap = () => {
   if (!isLoaded) return "Loading maps.";
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen text-center">
       <div className="grid grid-cols-1 md:grid-cols-2">
-        <div className="location p-8">
+        <div className="location p-8 text-white">
           <h1 className="text-4xl mb-6">{`${
             locationArr[locationArr?.length - 3] || ""
           }, ${locationArr[locationArr?.length - 2] || ""}, ${
@@ -127,7 +127,7 @@ const MyMap = () => {
             </button>
             <div className={show ? "block" : "hidden"}>
               <div class="flex justify-center items-center">
-                <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-500"></div>
+                <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
               </div>
             </div>
           </div>
@@ -144,21 +144,21 @@ const MyMap = () => {
             </GoogleMap>
           </div>
 
-          <div className="grid grid-cols-3 mt-4">
+          <div className="grid grid-cols-3 mt-4 text-center">
             <div className="">
-              <div className="text-2xl font-bold text-gray-700">Currency</div>
-              <div className="">{currency}-USD</div>
-              <div className="">USD-CHF</div>
+              <div className="text-2xl font-bold text-white">Currency</div>
+              <div className="text-white">{currency}-USD</div>
+              <div className="text-white">USD-CHF</div>
             </div>
             <div className="">
-              <div className="text-2xl font-bold text-gray-700">Price</div>
-              <div className="price">
+              <div className="text-2xl font-bold text-white">Price</div>
+              <div className="text-white">
                 {currentCurrency?.localCurrencyUsd || 0}
               </div>
-              <div className="price">{currentCurrency?.usdChf || 0}</div>
+              <div className="text-white">{currentCurrency?.usdChf || 0}</div>
             </div>
             <div className="div">
-              <div className="text-2xl font-bold text-gray-700">%Change</div>
+              <div className="text-2xl font-bold text-white">%Change</div>
               <div
                 className={`${
                   localToUSD > 0 ? "text-green-600" : "text-red-600"
